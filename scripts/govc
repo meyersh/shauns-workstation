@@ -1,0 +1,1 @@
+docker run --env-file=$HOME/.govc-env --rm vmware/govc /govc "$@"

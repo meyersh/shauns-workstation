@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+#
+# Helper script to launch into VMWare Remote Console sessions
+# quick/fast/easy.
+#
+# Shaun Meyer, Mar 2022
+#
+
+set -e
+GOVC_CONF_FILE="${HOME}/.govc-env"
+
+PATH=$PATH:'/mnt/c/Program Files (x86)/VMware/VMware Remote Console'
+WIN_OPEN=vmrc.exe
+MAC_OPEN=open
+LINUX_OPEN=xdg-open # untested
+
+if which "${WIN_OPEN}"; then
+    OPEN="${WIN_OPEN}"
+fi
+
+if which "${MAC_OPEN}"; then
+    OPEN="${MAC_OPEN}"
+fi
+
+if which "${LINUX_OPEN}"; then
+    OPEN="${LINUX_OPEN}"
+fi
+
+## Check dependencies
+
+for dep in docker fzy; do
+    if ! which "${dep}" > /dev/null; then
+        echo "${dep} doesnt seem to be installed. Install it with brew."
+        exit 1
+    fi
+done
+
+HTML5_FLAG=false
+if [ -e "/Applications/VMware\ Remote\ Console.app" ]; then
+    echo You need to install VMWare Remote Console
+    echo Get it from the app store.
+    echo
+    echo Since it is not installed, we can use the HTML5 console.
+    echo
+    HTML5_FLAG=true
+fi
+
+if [ ! -e "$GOVC_CONF_FILE" ]; then
+    echo Configuration file not found at "${GOVC_CONF_FILE}".
+    echo
+    echo Fill it with something like:
+    echo
+    cat <<EOF
+GOVC_URL=vcenter67.morningside.edu \\
+GOVC_USERNAME=administrator@vsphere.local \\
+GOVC_PASSWORD=the-password' \\
+GOVC_INSECURE=true
+EOF
+    echo
+    exit 1
+fi
+
+## Given satisfactory dependencies, go ahead and do the thing
+
+#source "${GOVC_CONF_FILE}"
+
+if [ -z "${1}" ]; then
+    echo Start typing a vm name.
+    TARGET=$(docker run --env-file=$HOME/.govc-env --rm vmware/govc /govc find / -type m | fzy | tr -d '\r')
+else
+    TARGET="${1}"
+fi
+
+echo "TARGET: ${TARGET}"
+
+URL=$(docker run --env-file=$HOME/.govc-env --rm vmware/govc /govc vm.console -h5=${HTML5_FLAG} "${TARGET}")
+"${OPEN}" "${URL}" &
