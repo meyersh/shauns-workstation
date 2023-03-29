@@ -1,4 +1,7 @@
 #!/bin/bash
+# Sign all available keys into ~/.ssh/*-cert.pub files.
+# Shaun Meyer, Feb 2023
+#
 set -o allexport; source ~/.env; set +o allexport
 
 # Check Vault login; resolves an issue where I had an expired
