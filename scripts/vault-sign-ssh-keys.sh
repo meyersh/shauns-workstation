@@ -2,7 +2,7 @@
 # Sign all available keys into ~/.ssh/*-cert.pub files.
 # Shaun Meyer, Feb 2023
 #
-set -o allexport; source ~/.env; set +o allexport
+[ -e ~/.env ] && ( set -o allexport; source ~/.env; set +o allexport )
 
 # Check Vault login; resolves an issue where I had an expired
 # VAULT_TOKEN env variable. This will check the on-disk (when VAULT_TOKEN) 
