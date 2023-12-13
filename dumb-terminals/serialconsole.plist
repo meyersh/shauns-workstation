@@ -10,7 +10,7 @@
     <array>
         <string>/usr/libexec/getty</string>
         <string>std.ttyUSB</string>
-        <string>cu.usbserial-83320</string>
+        <string>cu.usbserial-83420</string>
     </array>
 </dict>
 </plist>
