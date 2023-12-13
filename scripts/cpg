@@ -1,0 +1,4 @@
+rsync -r \
+    --exclude .git \
+    puppet7:/etc/puppetlabs/code/environments/puppet7/ \
+    ~/git/iac/puppet-control/
