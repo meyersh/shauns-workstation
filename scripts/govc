@@ -1,1 +1,7 @@
+# This expects a ~/.govc-env with the following defined:
+# GOVC_URL
+# GOVC_USERNAME
+# GOVC_PASSWORD
+# GOVC_INSECURE=True
+
 docker run --env-file=$HOME/.govc-env --rm vmware/govc /govc "$@"
